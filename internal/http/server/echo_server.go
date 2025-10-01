@@ -4,6 +4,7 @@ import (
 	"context"
 	"dungeons-dragon-service/docs"
 	"dungeons-dragon-service/internal/config"
+	"dungeons-dragon-service/internal/http/handlers"
 	"dungeons-dragon-service/internal/http/middlewares"
 	router "dungeons-dragon-service/internal/http/routers"
 	"dungeons-dragon-service/internal/repositories"
@@ -22,7 +23,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
-	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 type echoServer struct {
@@ -102,7 +102,6 @@ func (s *echoServer) initializeRouter() {
 
 	// Middlewares
 	jwtMW := middlewares.NewJWTMiddleware(config.GetConfigString("JWT_SECRET"))
-
 	// Swagger setup
 	docs.SwaggerInfo.Title = "Dungeon Dragon API Documentation"
 	docs.SwaggerInfo.Description = "API for managing D&D characters and quests."
@@ -112,7 +111,18 @@ func (s *echoServer) initializeRouter() {
 		docs.SwaggerInfo.Host = "localhost:8080"
 	}
 	docs.SwaggerInfo.BasePath = "/api/v1"
-	s.app.GET("/swagger/*", echoSwagger.WrapHandler)
+
+	//*if setup Swagger UI
+	// s.app.GET("/swagger/*", echoSwagger.WrapHandler)
+
+	//*if setup rapiDoc UI
+	// Serve raw OpenAPI JSON (consumed by RapiDoc)
+	s.app.GET("/openapi.json", func(c echo.Context) error {
+		return c.Blob(http.StatusOK, "application/json; charset=utf-8", []byte(docs.SwaggerInfo.ReadDoc()))
+	})
+
+	// Serve RapiDoc UI
+	s.app.GET("/rapidoc", handlers.RapiDoc)
 
 	// Routes
 	router.NewEchoRouter(s.app, jwtMW, authUC, optUC, charUC, questUC, imageUC)
