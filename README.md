@@ -1,53 +1,130 @@
-## Objective
+# D&D Characters and Quests API (Echo + GORM + Postgres)
 
-Your task is to design and implement a RESTful API for a Dungeons & Dragons (D&D) character and quest management application using the Go language and any suitable framework.
+A hexagonal-architecture API for managing D&D characters and quests.
 
-## Brief
+## Features
 
-We are developing a new platform for D&D enthusiasts, where they can manage their game characters and quests. As part of this project, your role is to build the API which will serve as the backbone for the character and quest management functionalities. 
+- Public vs registered access:
+  - GET /characters and GET /quests returns public items for unauthenticated visitors; returns all active items if authenticated.
+- Registered users:
+  - Create, edit, delete their own characters and quests.
+- Admin:
+  - Manage predefined options (Classes, Races, Quest Levels).
+  - On deletion of any option, related characters/quests are archived (not hard-deleted).
+- Validation:
+  - Description max 5000 characters.
+  - Up to 10 images per character/quest (stored as JSON array of URLs).
+- JWT auth with roles (user/admin).
+- Unit tests for business logic (use cases).
 
-The API should allow users to perform the following operations:
+## Tech
 
-#### Task 1: Public and Registered User Access
+- Echo framework
+- GORM with PostgreSQL
+- Hexagonal architecture
 
-- All visitors (registered or not) should be able to fetch public characters and quests.
-- Registered users should have the added ability to fetch all characters and quests (both public and private).
+## Getting started
 
-#### Task 2: Character and Quest Creation
+1. Set environment variables:
+   DB_PASSWORD: The password for the database user.
+   DB_NAME: The name of the database your application will use.
+   DB_SSLMODE: The SSL mode for connecting to the database (e.g., disable, require, verify-full).
+   DB_TIMEZONE: The timezone setting for your database connection (e.g., UTC).
+   JWT_SECRET: The secret key used to sign and verify JWT tokens for authentication.
+   FILE_STORAGE_PATH: The directory path where uploaded files will be stored.
+   MAX_FILE_SIZE: The maximum allowed size (in bytes) for uploaded files.
+   DOMAIN: The domain name where your application is hosted (used for generating URLs, cookies, etc.).
 
-- Registered users should be able to create a character or quest. The API endpoint for this should accept the following data:
-    - For Characters: Title, Description, Class, Race, Image (up to 10), and privacy setting (Public/Private)
-    - For Quests: Title, Description, Difficulty Level, Image (up to 10), and privacy setting (Public/Private)
-- The description should have a 5000 character limit. 
-- Class/Race for characters and Difficulty Level for quests should be selectable from predefined options.
+2. Run Postgres and create database.
 
-#### Task 3: Character and Quest Management
+3. Install deps and run:
+   ```bash
+   go mod tidy
+   go run ./cmd/api
+   ```
 
-- Registered users should have the ability to edit or delete their own characters and quests.
+4. Run migration database & pre data insert:
+   go run ./internal/infrastructure/db/migrations/migration.go 
 
-#### Task 4: Admin Control
+## Swagger / OpenAPI
 
-- An Admin user should be able to create, edit or delete predefined options for Class/Race and Difficulty Levels.
-- On deletion of any predefined option, all related characters or quests should not be permanently deleted, but rather moved to an "archive" state.
+Use [swaggo/swag](https://github.com/swaggo/swag) and [swaggo/echo-swagger](https://github.com/swaggo/echo-swagger).
 
-#### Task 5: Testing
+- Install the `swag` CLI if you don't have it:
+  ```bash
+  go install github.com/swaggo/swag/cmd/swag@latest
+  ```
+- Generate docs (from repo root):
+  ```bash
+  swag init -g cmd/api/main.go -o ./docs
+  ```
+- Start the server:
+  ```bash
+  go run ./cmd/api
+  ```
+- Open the Swagger UI:
+  - http://localhost:8080/swagger/index.html
 
-- Ensure to write unit tests for your business logic.
+Note:
+- Annotations live in the handler files.
+- Security scheme is `BearerAuth` (Authorization: `Bearer <token>`).
+- GET list endpoints are public; create/update/delete require auth; admin endpoints require admin role.
 
-### Evaluation Criteria
+## API Overview
 
- - Adherence to *Go* best practices.
- - Completeness: Did you include all features?
- - Correctness: Does the solution work as expected and handle edge cases?
- - Maintainability: Is the code written in a clean, maintainable way?
- - Testing: Is the solution adequately tested?
- - Documentation: Is the API well-documented?
+- Auth:
+  - POST /auth/login {username, password} -> {token}
 
-### CodeSubmit 
+- Public/Registered:
+  - GET /characters
+  - GET /quests
+  - GET /options/classes
+  - GET /options/races
+  - GET /options/quest-levels
 
-Please organize, design, test, and document your code as if it were
-going into production - then push your changes to the master branch.
+- Registered (Authorization: Bearer <token>):
+  - POST /characters
+  - PUT /characters/:id
+  - DELETE /characters/:id
+  - POST /quests
+  - PUT /quests/:id
+  - DELETE /quests/:id
+  - POST /characters/:id/images
+  - POST /quests/:id/images
 
-All the best and happy coding,
+- Admin (Authorization: Bearer <admin token>):
+  - POST /admin/options/classes
+  - PUT /admin/options/classes/:id
+  - DELETE /admin/options/classes/:id
+  - POST /admin/options/races
+  - PUT /admin/options/races/:id
+  - DELETE /admin/options/races/:id
+  - POST /admin/options/quest-levels
+  - PUT /admin/options/quest-levels/:id
+  - DELETE /admin/options/quest-levels/:id
 
-The D&D Campaign Management Team
+## Notes
+
+- Accessibility: public | private
+  - Unauthenticated users see only public.
+  - Any authenticated user can fetch all active items (as per the specification).
+- Status: active | archived
+  - archived items are not returned by list endpoints and cannot be edited.
+
+## Testing
+
+```bash
+go test ./internal/usecases -v
+```
+
+## Docker Compose
+
+This project supports running with Docker Compose for easy setup and deployment.
+
+### Usage
+
+To start all services in detached mode, run:
+
+```bash
+docker compose up -d
+```
