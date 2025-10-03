@@ -26,14 +26,16 @@ A hexagonal-architecture API for managing D&D characters and quests.
 ## Getting started
 
 1. Set environment variables:
-   DB_PASSWORD: The password for the database user.
-   DB_NAME: The name of the database your application will use.
-   DB_SSLMODE: The SSL mode for connecting to the database (e.g., disable, require, verify-full).
-   DB_TIMEZONE: The timezone setting for your database connection (e.g., UTC).
-   JWT_SECRET: The secret key used to sign and verify JWT tokens for authentication.
-   FILE_STORAGE_PATH: The directory path where uploaded files will be stored.
-   MAX_FILE_SIZE: The maximum allowed size (in bytes) for uploaded files.
-   DOMAIN: The domain name where your application is hosted (used for generating URLs, cookies, etc.).
+| Environment Variable   | Description                                                                                   | Example Value                |
+|------------------------|-----------------------------------------------------------------------------------------------|------------------------------|
+| DB_PASSWORD            | The password for the database user.                                                           | your_db_password             |
+| DB_NAME                | The name of the database your application will use.                                           | your_database_name           |
+| DB_SSLMODE             | The SSL mode for connecting to the database (e.g., disable, require, verify-full).           | disable                      |
+| DB_TIMEZONE            | The timezone setting for your database connection (e.g., UTC).                               | UTC                          |
+| JWT_SECRET             | The secret key used to sign and verify JWT tokens for authentication.                        | your_jwt_secret_key          |
+| FILE_STORAGE_PATH      | The directory path where uploaded files will be stored.                                       | /var/app/uploads             |
+| MAX_FILE_SIZE          | The maximum allowed size (in bytes) for uploaded files.                                       | 10485760                     |
+| DOMAIN                 | The domain name where your application is hosted (used for generating URLs, cookies, etc.).   | example.com                  |
 
 2. Run Postgres and create database.
 
