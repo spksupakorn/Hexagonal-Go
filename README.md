@@ -26,6 +26,7 @@ A hexagonal-architecture API for managing D&D characters and quests.
 ## Getting started
 
 1. Set environment variables:
+   
 | Environment Variable   | Description                                                                                   | Example Value                |
 |------------------------|-----------------------------------------------------------------------------------------------|------------------------------|
 | DB_PASSWORD            | The password for the database user.                                                           | your_db_password             |
