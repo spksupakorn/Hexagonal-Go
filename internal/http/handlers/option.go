@@ -93,7 +93,7 @@ func (h *OptionHandler) ListQuestLevels(c echo.Context) error {
 // @Success      201    {object}  dto.APIObjectResponse{data=string}  "Class created successfully"
 // @Failure      400    {object}  dto.APIErrorResponse{data=interface{}}  "Bad Request"
 // @Failure      401    {object}  dto.APIErrorResponse{data=interface{}}  "Unauthorized"
-// @Router       /options/classes [post]
+// @Router       /admin/options/classes [post]
 func (h *OptionHandler) CreateClass(c echo.Context) error {
 	defer custom.PanicController(c)
 	var req dto.OptionReq
@@ -125,7 +125,7 @@ func (h *OptionHandler) CreateClass(c echo.Context) error {
 // @Failure      400    {object}  dto.APIErrorResponse{data=interface{}}  "Bad Request"
 // @Failure      401    {object}  dto.APIErrorResponse{data=interface{}}  "Unauthorized"
 // @Failure      404    {object}  dto.APIErrorResponse{data=interface{}}  "Class not found"
-// @Router       /options/classes/{id} [put]
+// @Router       /admin/options/classes/{id} [put]
 func (h *OptionHandler) UpdateClass(c echo.Context) error {
 	defer custom.PanicController(c)
 	id := c.Param("id")
@@ -145,6 +145,19 @@ func (h *OptionHandler) UpdateClass(c echo.Context) error {
 	return c.JSON(http.StatusOK, custom.BuildResponse(custom.Success, "class updated"))
 }
 
+// DeleteClass godoc
+// @Summary      Delete an existing class
+// @Description  Deletes an existing class identified by its ID.
+// @Tags         options
+// @Security     BearerAuth
+// @Accept       json
+// @Produce      json
+// @Param        id     path      string         true  "Class ID"
+// @Success      200    {object}  dto.APIObjectResponse{data=string}  "Class deleted successfully"
+// @Failure      400    {object}  dto.APIErrorResponse{data=interface{}}  "Bad Request"
+// @Failure      401    {object}  dto.APIErrorResponse{data=interface{}}  "Unauthorized"
+// @Failure      404    {object}  dto.APIErrorResponse{data=interface{}}  "Class not found"
+// @Router       /admin/options/classes/{id} [delete]
 func (h *OptionHandler) DeleteClass(c echo.Context) error {
 	defer custom.PanicController(c)
 	id := c.Param("id")
@@ -165,7 +178,7 @@ func (h *OptionHandler) DeleteClass(c echo.Context) error {
 // @Success      201    {object}  dto.APIObjectResponse{data=string}  "Race created successfully"
 // @Failure      400    {object}  dto.APIErrorResponse{data=interface{}}  "Bad Request"
 // @Failure      401    {object}  dto.APIErrorResponse{data=interface{}}  "Unauthorized"
-// @Router       /options/races [post]
+// @Router       /admin/options/races [post]
 func (h *OptionHandler) CreateRace(c echo.Context) error {
 	defer custom.PanicController(c)
 	var req dto.OptionReq
@@ -197,7 +210,7 @@ func (h *OptionHandler) CreateRace(c echo.Context) error {
 // @Failure      400    {object}  dto.APIErrorResponse{data=interface{}}  "Bad Request"
 // @Failure      401    {object}  dto.APIErrorResponse{data=interface{}}  "Unauthorized"
 // @Failure      404    {object}  dto.APIErrorResponse{data=interface{}}  "Not Found"
-// @Router       /options/races/{id} [put]
+// @Router       /admin/options/races/{id} [put]
 func (h *OptionHandler) UpdateRace(c echo.Context) error {
 	defer custom.PanicController(c)
 	id := c.Param("id")
@@ -229,7 +242,7 @@ func (h *OptionHandler) UpdateRace(c echo.Context) error {
 // @Failure      400    {object}  dto.APIErrorResponse{data=interface{}}  "Bad Request"
 // @Failure      401    {object}  dto.APIErrorResponse{data=interface{}}  "Unauthorized"
 // @Failure      404    {object}  dto.APIErrorResponse{data=interface{}}  "Not Found"
-// @Router       /options/races/{id} [delete]
+// @Router       /admin/options/races/{id} [delete]
 func (h *OptionHandler) DeleteRace(c echo.Context) error {
 	defer custom.PanicController(c)
 	id := c.Param("id")
@@ -250,7 +263,7 @@ func (h *OptionHandler) DeleteRace(c echo.Context) error {
 // @Success      201    {object}  dto.APIObjectResponse{data=string}  "Quest level created successfully"
 // @Failure      400    {object}  dto.APIErrorResponse{data=interface{}}  "Bad Request"
 // @Failure      401    {object}  dto.APIErrorResponse{data=interface{}}  "Unauthorized"
-// @Router       /options/quest-levels [post]
+// @Router       /admin/options/quest-levels [post]
 func (h *OptionHandler) CreateQuestLevel(c echo.Context) error {
 	defer custom.PanicController(c)
 	var req dto.OptionReq
@@ -282,7 +295,7 @@ func (h *OptionHandler) CreateQuestLevel(c echo.Context) error {
 // @Failure      400    {object}  dto.APIErrorResponse{data=interface{}}  "Bad Request"
 // @Failure      401    {object}  dto.APIErrorResponse{data=interface{}}  "Unauthorized"
 // @Failure      404    {object}  dto.APIErrorResponse{data=interface{}}  "Not Found"
-// @Router       /options/quest-levels/{id} [put]
+// @Router       /admin/options/quest-levels/{id} [put]
 func (h *OptionHandler) UpdateQuestLevel(c echo.Context) error {
 	defer custom.PanicController(c)
 	id := c.Param("id")
@@ -314,7 +327,7 @@ func (h *OptionHandler) UpdateQuestLevel(c echo.Context) error {
 // @Failure      400    {object}  dto.APIErrorResponse{data=interface{}}  "Bad Request"
 // @Failure      401    {object}  dto.APIErrorResponse{data=interface{}}  "Unauthorized"
 // @Failure      404    {object}  dto.APIErrorResponse{data=interface{}}  "Not Found"
-// @Router       /options/quest-levels/{id} [delete]
+// @Router       /admin/options/quest-levels/{id} [delete]
 func (h *OptionHandler) DeleteQuestLevel(c echo.Context) error {
 	defer custom.PanicController(c)
 	id := c.Param("id")

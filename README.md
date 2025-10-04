@@ -1,4 +1,4 @@
-# D&D Characters and Quests API (Echo + GORM + Postgres)
+# Dungeon & Dragon Characters and Quests API (Echo + GORM + Postgres)
 
 A hexagonal-architecture API for managing D&D characters and quests.
 
@@ -47,7 +47,9 @@ A hexagonal-architecture API for managing D&D characters and quests.
    ```
 
 4. Run migration database & pre data insert:
+   ```bash
    go run ./internal/infrastructure/db/migrations/migration.go 
+   ```
 
 ## Swagger / OpenAPI
 

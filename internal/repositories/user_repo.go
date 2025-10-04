@@ -22,6 +22,9 @@ func (r *userRepo) Create(u *model.User) (*model.User, error) {
 func (r *userRepo) FindByEmail(email string) (*model.User, error) {
 	var u model.User
 	if err := r.db.Where("email = ?", email).First(&u).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return &u, nil
@@ -30,6 +33,9 @@ func (r *userRepo) FindByEmail(email string) (*model.User, error) {
 func (r *userRepo) FindByUsername(username string) (*model.User, error) {
 	var u model.User
 	if err := r.db.Where("username = ?", username).First(&u).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return &u, nil

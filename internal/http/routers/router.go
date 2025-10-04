@@ -21,6 +21,7 @@ func NewEchoRouter(e *echo.Echo, jwtMW *middleware.JWTMiddleware, auth usecase.A
 	// Auth
 	authH := handlers.NewAuthHandler(auth)
 	apiV1.POST("/auth/login", authH.Login)
+	apiV1.POST("/auth/register", authH.Register)
 
 	// Public and registered access
 	charH := handlers.NewCharacterHandler(ch)

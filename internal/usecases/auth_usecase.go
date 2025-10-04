@@ -33,7 +33,7 @@ func (u *authUseCase) Register(username, email, password string) (*dto.LoginResp
 	// Check if user already exists
 	existingUser, err := u.users.FindByEmail(email)
 	if err != nil {
-		return nil, custom.NewUnexpectedError("failed to check if user exists")
+		return nil, custom.NewUnexpectedError("failed to check if email exists")
 	}
 	if existingUser != nil {
 		return nil, custom.NewConflictError("email already exists")

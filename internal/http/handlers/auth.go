@@ -47,3 +47,32 @@ func (h *AuthHandler) Login(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, custom.BuildResponse(custom.Success, token))
 }
+
+// Register godoc
+// @Summary      Register a new user
+// @Description  Registers a new user and returns a JWT token.
+// @Tags         authentication
+// @Accept       json
+// @Produce      json
+// @Param        registerRequest  body      dto.RegisterRequest  true  "Register Request"
+// @Success      200              {object}  dto.APIObjectResponse{data=dto.LoginResponse}  "Successful registration"
+// @Failure      400              {object}  dto.APIErrorResponse{data=interface{}}  "Invalid request"
+// @Failure      409              {object}  dto.APIErrorResponse{data=interface{}}  "Conflict - Email or username already exists"
+// @Router       /auth/register [post]
+func (h *AuthHandler) Register(c echo.Context) error {
+	defer custom.PanicController(c)
+	var req dto.RegisterRequest
+	if err := c.Bind(&req); err != nil {
+		e := custom.NewBadRequestError("invalid request body")
+		custom.PanicException(e)
+	}
+	if err := h.v.Struct(req); err != nil {
+		e := custom.NewValidationError("required fields are missing or invalid")
+		custom.PanicException(e)
+	}
+	auth, err := h.uc.Register(req.Username, req.Email, req.Password)
+	if err != nil {
+		custom.PanicException(err)
+	}
+	return c.JSON(http.StatusOK, custom.BuildResponse(custom.Success, auth))
+}
